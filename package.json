@@ -1,0 +1,27 @@
+{
+  "name": "sourcejs-spec-dependencies",
+  "version": "0.1.0",
+  "description": "Cross links of specs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sourcejs/sourcejs-spec-dependencies"
+  },
+  "keywords": [
+    "sourcejs",
+    "plugin",
+    "crosslinks"
+  ],
+  "author": {
+    "name": "Roman Alekseev"
+  },
+  "bugs": {
+    "url": "https://github.com/sourcejs/sourcejs-spec-dependencies/issues"
+  },
+  "homepage": "https://github.com/sourcejs/sourcejs-spec-dependencies",
+  "readme": "",
+  "readmeFilename": "README.md",
+  "_id": "sourcejs-spec-dependencies@0.1.0",
+  "_shasum": "",
+  "_resolved": "",
+  "_from": "sourcejs-spec-dependencies@git://github.com/sourcejs/sourcejs-spec-dependencies"
+}
