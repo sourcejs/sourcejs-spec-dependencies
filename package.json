@@ -18,10 +18,10 @@
     "url": "https://github.com/sourcejs/sourcejs-spec-dependencies/issues"
   },
   "homepage": "https://github.com/sourcejs/sourcejs-spec-dependencies",
-  "readme": "",
+  "readme": "sourcejs-spec-dependencies\n==========================\n",
   "readmeFilename": "README.md",
   "_id": "sourcejs-spec-dependencies@0.1.0",
-  "_shasum": "",
-  "_resolved": "",
+  "_shasum": "42656dba73da3d131b5aa5223c0f8107766f443e",
+  "_resolved": "git://github.com/sourcejs/sourcejs-spec-dependencies#fe9fae410fda7e9ec76db2117613d55fc637faa0",
   "_from": "sourcejs-spec-dependencies@git://github.com/sourcejs/sourcejs-spec-dependencies"
 }

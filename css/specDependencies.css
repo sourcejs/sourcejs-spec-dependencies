@@ -1,0 +1,20 @@
+.source_deps {
+    display: block;
+    position: relative;
+    border-radius: 10px;
+    }
+.source_deps:empty {
+    display: none;
+    }
+.source_deps p {
+    margin: 0 0 10px;
+    }
+.source_deps p:last-child {
+    margin-bottom: 0;
+    }
+body p.source_deps,
+.source_deps {
+    margin: 20px 33.6% 20px 0;
+    padding: 10px 25px;
+    background: #f9f9f9;
+    }
