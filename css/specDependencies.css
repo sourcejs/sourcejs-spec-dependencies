@@ -7,7 +7,10 @@
     display: none;
     }
 .source_deps p {
-    margin: 0 0 10px;
+    margin: 10px 0 5px;
+    }
+.source_deps p:first-child {
+    margin-top: 0;
     }
 .source_deps p:last-child {
     margin-bottom: 0;
@@ -17,4 +20,19 @@ body p.source_deps,
     margin: 20px 33.6% 20px 0;
     padding: 10px 25px;
     background: #f9f9f9;
+    }
+.source_deps_used-by-specs,
+.source_deps_used-specs {
+    margin-left: -5px;
+    }
+.source_deps_used-by-specs {
+    display: none;
+    }
+.source_deps_h_expand {
+    border-bottom: 1px dashed;
+    color: rgb(51,51,51);
+    }
+.source_deps_h_expand:hover {
+    text-decoration: none;
+    color: rgb(100,100,100);
     }

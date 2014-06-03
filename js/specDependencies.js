@@ -1,8 +1,8 @@
 /*
  *
- * Spec deoendencies plugin
+ * Spec dependencies plugin
  *
- * @author Roman Alekseev
+ * @author Roman Alekseev jesprider@gmail.com
  *
  * */
 "use strict";
@@ -25,6 +25,7 @@ define([
             DEPENDENCIES_ROOT_CLASS: "source_deps",
             USED_SPECS_CLASS: "source_deps_used-specs",
             USED_BY_SPECS_CLASS: "source_deps_used-by-specs",
+            USED_BY_SPEC_HEAD_LINK_CLASS: "source_deps_h_expand",
 
             INFO_FILE: "info.json",
             URL_TO_DEPENDENCIES_FILE: "/data/spec_dependencies_tree.json",
@@ -32,14 +33,12 @@ define([
             SPEC_INFO_NOT_FOUND: "Information about this spec not found.",
             FILE_TREE_NOT_FOUND: "File spec_dependencies_tree.json not found.",
 
-            USED_SPECS_HEAD: "This spec uses:",
-            USED_BY_SPEC_HEAD: "This spec used by:",
-
-            tempSpecList: {}
+            USED_SPECS_HEAD: "Most likely it uses",
+            USED_BY_SPEC_HEAD: "This spec used by"
 
         }, this.options.pluginsOptions.specDependencies);
 
-        $(function(){
+        $(function() {
             _this.init();
         });
 
@@ -48,27 +47,66 @@ define([
     SpecDependencies.prototype = module.createInstance();
     SpecDependencies.prototype.constructor = SpecDependencies;
 
-    SpecDependencies.prototype.init = function () {
-        this.drawUsedSpecs();
-        this.getDependenciesTreeJSON();
+    SpecDependencies.prototype.init = function() {
+        var _this = this,
+            USED_BY_SPECS_CLASS = this.options.pluginsOptions.specDependencies.USED_BY_SPECS_CLASS,
+            USED_BY_SPEC_HEAD_LINK_CLASS = this.options.pluginsOptions.specDependencies.USED_BY_SPEC_HEAD_LINK_CLASS;
+
+        // waiting for template's rendering
+        setTimeout(function() {
+            _this.drawUsedSpecs();
+            _this.getDependenciesTreeJSON();
+        }, 200);
+
+        utils.toggleBlock(USED_BY_SPEC_HEAD_LINK_CLASS, USED_BY_SPECS_CLASS);
     };
 
-    SpecDependencies.prototype.getSpecInfo = function() {
-        var fileTree = pft.getParsedJSON(),
-            currentUrlArr = this.getCurrentUrlPathArray(),
+    // Get classes of all elements inside .source_example
+    SpecDependencies.prototype.getClassList = function() {
+        var tags = $('.source_example *'),
+            classNames = {},
+            classList = [];
 
-            specInfo;
+        for (var tg = 0; tg < tags.length; tg++) {
+            var tag = tags[tg];
 
-        for (var i = 0; i < currentUrlArr.length; i++) {
-            fileTree = fileTree[currentUrlArr[i]];
+            if (tag.className) {
+                var classes = tag.className.split(" ");
+                for (var cn = 0; cn < classes.length; cn++){
+                    var cName = classes[cn];
+                    if (!classNames[cName] && cName.indexOf("_") == -1 && cName != "") {
+                        classNames[cName] = true;
+                    }
+                }
+            }
         }
 
-        specInfo = fileTree["specFile"];
+        for (var name in classNames) classList.push(name);
 
-        if (specInfo) return specInfo;
+        return classList;
+    };
 
-        console.log(this.options.pluginsOptions.specDependencies.SPEC_INFO_NOT_FOUND);
-        return false;
+    SpecDependencies.prototype.getUsedSpecList = function() {
+        var specPaths = pft.getAllPages(),
+            classList = this.getClassList(),
+            specList = [],
+            currentSpec = this.getCurrentUrlPath();
+
+        for (var cn = 0; cn < classList.length; cn++) {
+            var cName = classList[cn];
+
+            for (var specPath in specPaths) {
+                if (currentSpec == utils.unifySpecPath(specPath)) continue;
+
+                var specCat = specPath.slice(specPath.lastIndexOf("/")+1);
+
+                if (specCat == cName) {
+                    specList.push(specPath);
+                }
+            }
+        }
+
+        return specList;
     };
 
     SpecDependencies.prototype.getDependenciesTreeJSON = function() {
@@ -79,7 +117,7 @@ define([
             url: URL_TO_DEPENDENCIES_FILE,
             dataType: 'json',
             success: function(data) {
-                _this.getUsedBySpecsList(data);
+                _this.getUsedByspecList(data);
             },
             error: function() {
                 console.log(_this.options.pluginsOptions.specDependencies.FILE_TREE_NOT_FOUND);
@@ -87,26 +125,13 @@ define([
         });
     };
 
-    SpecDependencies.prototype.getUsedSpecsList = function() {
-        var infoFile = this.getSpecInfo(),
-            specsList;
-
-        if (infoFile) {
-            specsList = infoFile["usedSpecs"];
-            return specsList;
-        }
-
-        return false;
-    };
-
-    SpecDependencies.prototype.getUsedBySpecsList = function(jsonTree) {
-        var specsList,
-            currentUrl = window.location.pathname;
+    SpecDependencies.prototype.getUsedByspecList = function(jsonTree) {
+        var specList,
+            currentUrl = this.getCurrentUrlPath();
 
         if (jsonTree) {
-            currentUrl = currentUrl.slice( 1, currentUrl.lastIndexOf('/') );
-            specsList = jsonTree[currentUrl];
-            return this.drawUsedBySpecs(specsList);
+            specList = jsonTree[currentUrl];
+            return this.drawUsedBySpecs(specList);
         }
 
         return false;
@@ -115,7 +140,7 @@ define([
     // Specs that used in current spec
     SpecDependencies.prototype.drawUsedSpecs = function() {
         var _this = this,
-            specsList = this.getUsedSpecsList(),
+            specList = this.getUsedSpecList(),
 
             USED_SPECS_CLASS = this.options.pluginsOptions.specDependencies.USED_SPECS_CLASS,
             ROOT_CLASS = this.options.pluginsOptions.specDependencies.DEPENDENCIES_ROOT_CLASS,
@@ -125,7 +150,7 @@ define([
             header = "",
             title = "";
 
-        specsList && specsList.forEach(function(specUrl) {
+        specList && specList.forEach(function(specUrl) {
             specUrl = utils.unifySpecPath(specUrl);
             title = _this.getTitleOfSpecByUrl(specUrl);
 
@@ -142,18 +167,19 @@ define([
     };
 
     // Specs that use current spec
-    SpecDependencies.prototype.drawUsedBySpecs = function(specsList) {
+    SpecDependencies.prototype.drawUsedBySpecs = function(specList) {
         var _this = this,
 
             USED_BY_SPECS_CLASS = this.options.pluginsOptions.specDependencies.USED_BY_SPECS_CLASS,
             ROOT_CLASS = this.options.pluginsOptions.specDependencies.DEPENDENCIES_ROOT_CLASS,
             HEADER = this.options.pluginsOptions.specDependencies.USED_BY_SPEC_HEAD,
+            USED_BY_SPEC_HEAD_LINK_CLASS = this.options.pluginsOptions.specDependencies.USED_BY_SPEC_HEAD_LINK_CLASS,
 
             res = "",
             header = "",
             title = "";
 
-        specsList && specsList.forEach(function(specUrl) {
+        specList && specList.forEach(function(specUrl) {
             specUrl = utils.unifySpecPath(specUrl);
             title = _this.getTitleOfSpecByUrl(specUrl);
 
@@ -161,7 +187,7 @@ define([
         });
 
         if ($('.' + USED_BY_SPECS_CLASS).length === 0 && res != "") {
-            header = '<p>' + HEADER + '</p>';
+            header = '<p><a href="#" class="' + USED_BY_SPEC_HEAD_LINK_CLASS + '" onclick="return false;">' + HEADER + '</a></p>';
             _this.turnOnLayout();
 
             $('.' + ROOT_CLASS)
@@ -181,7 +207,6 @@ define([
     SpecDependencies.prototype.getTitleOfSpecByUrl = function(url) {
         var fileTree = pft.getParsedJSON(),
             urlArr = this.getCurrentUrlPathArray(url),
-
             title;
 
         for (var i = 0; i < urlArr.length; i++) {
@@ -206,7 +231,11 @@ define([
         var currentUrl = urlToProceed || this.getCurrentUrlPath(),
             urlArr;
 
-        urlArr = currentUrl.slice(1).split('/');
+        if (currentUrl.charAt(0) == '/') {
+            urlArr = currentUrl.slice(1).split('/');
+        } else {
+            urlArr = currentUrl.split('/');
+        }
 
         return urlArr;
     };
