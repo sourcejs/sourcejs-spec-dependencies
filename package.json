@@ -18,7 +18,7 @@
     "url": "https://github.com/sourcejs/sourcejs-spec-dependencies/issues"
   },
   "homepage": "https://github.com/sourcejs/sourcejs-spec-dependencies",
-  "readme": "sourcejs-spec-dependencies\n==========================\n",
+  "readme": "Spec Dependencies plugin (crosslinks)",
   "readmeFilename": "README.md",
   "_id": "sourcejs-spec-dependencies@0.1.0",
   "_shasum": "42656dba73da3d131b5aa5223c0f8107766f443e",
