@@ -9,10 +9,10 @@
 
 define([
     'jquery',
-    'modules/module',
-    'modules/css',
-    'modules/parseFileTree',
-    'modules/utils'
+    'sourceModules/module',
+    'sourceModules/css',
+    'sourceModules/parseFileTree',
+    'sourceModules/utils'
 ], function ($, module, Css, pft, utils) {
 
     function SpecDependencies() {
