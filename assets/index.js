@@ -18,7 +18,7 @@ define([
     function SpecDependencies() {
         var _this = this;
 
-        var moduleCss = new Css("sourcejs-spec-dependencies/css/specDependencies.css");
+        var moduleCss = new Css("/node_modules/sourcejs-spec-dependencies/assets/css/specDependencies.css");
 
         this.options.pluginsOptions.specDependencies = $.extend(true, {
 
