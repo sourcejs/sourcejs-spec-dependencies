@@ -1,9 +1,9 @@
 var fs = require('fs');
+var path = require('path');
 
-var OUTPUT_SPEC_DEPENDENCIES_FILE = global.opts.core.specDependenciesTree.outputFile || 'data/spec_dependencies_tree.json';
-var specDepsIncludedDirs = global.opts.core.specDependenciesTree.includedDirs || [];
+var includedDirs = global.opts.core.specDependenciesTree.includedDirs || [];
 var sourceRoot = global.opts.core.common.pathToUser;
-var INFO_FILE = "info.json";
+var infoFile = "info.json";
 
 // configuration for function timeout
 var CRON = global.opts.core.fileTree.cron;
@@ -14,14 +14,14 @@ var specDependenciesTree = function(dir) {
     var outputJSON = {},
         specsDirs = {};
 
-    specDepsIncludedDirs.forEach(function(includedDir) {
+    includedDirs.forEach(function(includedDir) {
         specsDirs = fs.readdirSync(dir + '/' + includedDir);
 
         specsDirs.forEach(function(specDir) {
             var pathToInfo = dir + '/' + includedDir + '/' + specDir;
 
-            if (fs.existsSync(pathToInfo + '/' + INFO_FILE)) {
-                var fileJSON = JSON.parse(fs.readFileSync(pathToInfo + '/' + INFO_FILE, "utf8"));
+            if (fs.existsSync(pathToInfo + '/' + infoFile)) {
+                var fileJSON = JSON.parse(fs.readFileSync(pathToInfo + '/' + infoFile, "utf8"));
 
                 if (fileJSON['usedSpecs']) {
                     fileJSON['usedSpecs'].forEach(function(usedSpec){
@@ -37,11 +37,18 @@ var specDependenciesTree = function(dir) {
 };
 
 var SpecDependenciesWrite = function() {
-    fs.writeFile(global.app.get('user') + "/" + OUTPUT_SPEC_DEPENDENCIES_FILE, JSON.stringify(specDependenciesTree(sourceRoot), null, 4), function (err) {
+    var outputFile = global.app.get('user') + "/" + global.opts.core.specDependenciesTree.outputFile;
+    var outputPath = path.dirname(outputFile);
+
+    if (!fs.existsSync(outputPath)) {
+        fs.mkdirSync(outputPath);
+    }
+
+    fs.writeFile(outputFile, JSON.stringify(specDependenciesTree(sourceRoot), null, 4), function (err) {
         if (err) {
-            console.log(err);
+            console.log('Error writing file tree of dependecies: ', err);
         } else {
-            console.log("Spec dependencies JSON saved to " + global.opts.core.common.pathToUser+"/"+OUTPUT_SPEC_DEPENDENCIES_FILE);
+            console.log("Spec dependencies JSON saved to " + outputFile);
         }
     });
 };
@@ -51,6 +58,6 @@ SpecDependenciesWrite();
 // setcron
 if (CRON || (global.MODE === 'production' && CRON_PROD)) {
     setInterval(function(){
-        GlobalWrite();
+        SpecDependenciesWrite();
     }, CRON_REPEAT_TIME);
 }
