@@ -23,7 +23,7 @@ body p.source_deps,
     }
 .source_deps_used-by-specs,
 .source_deps_used-specs {
-    margin-left: -5px;
+    margin-left: -5px !important;
     }
 .source_deps_used-by-specs {
     display: none;
