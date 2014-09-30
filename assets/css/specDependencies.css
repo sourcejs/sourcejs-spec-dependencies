@@ -25,6 +25,10 @@ body p.source_deps,
 .source_deps_used-specs {
     margin-left: -5px !important;
     }
+.source_deps_used-by-specs > li,
+.source_deps_used-specs > li {
+    list-style-type: none !important;
+    }
 .source_deps_used-by-specs {
     display: none;
     }
