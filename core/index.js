@@ -67,6 +67,6 @@ SpecDependenciesWrite();
 // Running by cron
 if (config.cron || (global.MODE === 'production' && config.cronProd)) {
     setInterval(function () {
-        writeDataFile();
+        SpecDependenciesWrite();
     }, config.cronRepeatTime);
 }
