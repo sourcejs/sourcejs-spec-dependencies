@@ -1,7 +1,7 @@
 {
   "name": "sourcejs-spec-dependencies",
-  "version": "0.1.5",
-  "description": "Cross links of specs",
+  "version": "0.1.6",
+  "description": "Crosslinks of specs",
   "repository": {
     "type": "git",
     "url": "https://github.com/sourcejs/sourcejs-spec-dependencies"

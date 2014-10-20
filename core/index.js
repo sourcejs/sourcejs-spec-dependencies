@@ -1,27 +1,36 @@
 var fs = require('fs');
+var deepExtend = require('deep-extend');
 var path = require('path');
 
-var includedDirs = global.opts.core.specDependenciesTree.includedDirs || [];
-var sourceRoot = global.opts.core.common.pathToUser;
-var infoFile = "info.json";
+var config = {
+    includedDirs: [],
+    outputFile: "data/spec_dependencies_tree.json",
 
-// configuration for function timeout
-var CRON = global.opts.core.fileTree.cron;
-var CRON_PROD = global.opts.core.fileTree.cronProd;
-var CRON_REPEAT_TIME = global.opts.core.fileTree.cronRepeatTime;
+    // cron
+    cron: false,
+    cronProd: true,
+    cronRepeatTime: 60000,
+
+    // file from parser get info
+    infoFile: "info.json",
+    sourceRoot: global.opts.core.common.pathToUser
+};
+// Overwriting base options
+deepExtend(config, global.opts.core.specDependenciesTree);
+
 
 var specDependenciesTree = function(dir) {
     var outputJSON = {},
         specsDirs = {};
 
-    includedDirs.forEach(function(includedDir) {
+    config.includedDirs.forEach(function(includedDir) {
         specsDirs = fs.readdirSync(dir + '/' + includedDir);
 
         specsDirs.forEach(function(specDir) {
             var pathToInfo = dir + '/' + includedDir + '/' + specDir;
 
-            if (fs.existsSync(pathToInfo + '/' + infoFile)) {
-                var fileJSON = JSON.parse(fs.readFileSync(pathToInfo + '/' + infoFile, "utf8"));
+            if (fs.existsSync(pathToInfo + '/' + config.infoFile)) {
+                var fileJSON = JSON.parse(fs.readFileSync(pathToInfo + '/' + config.infoFile, "utf8"));
 
                 if (fileJSON['usedSpecs']) {
                     fileJSON['usedSpecs'].forEach(function(usedSpec){
@@ -37,14 +46,14 @@ var specDependenciesTree = function(dir) {
 };
 
 var SpecDependenciesWrite = function() {
-    var outputFile = global.app.get('user') + "/" + global.opts.core.specDependenciesTree.outputFile;
+    var outputFile = global.app.get('user') + "/" + config.outputFile;
     var outputPath = path.dirname(outputFile);
 
     if (!fs.existsSync(outputPath)) {
         fs.mkdirSync(outputPath);
     }
 
-    fs.writeFile(outputFile, JSON.stringify(specDependenciesTree(sourceRoot), null, 4), function (err) {
+    fs.writeFile(outputFile, JSON.stringify(specDependenciesTree(config.sourceRoot), null, 4), function (err) {
         if (err) {
             console.log('Error writing file tree of dependecies: ', err);
         } else {
@@ -55,9 +64,9 @@ var SpecDependenciesWrite = function() {
 
 SpecDependenciesWrite();
 
-// setcron
-if (CRON || (global.MODE === 'production' && CRON_PROD)) {
-    setInterval(function(){
-        SpecDependenciesWrite();
-    }, CRON_REPEAT_TIME);
+// Running by cron
+if (config.cron || (global.MODE === 'production' && config.cronProd)) {
+    setInterval(function () {
+        writeDataFile();
+    }, config.cronRepeatTime);
 }
