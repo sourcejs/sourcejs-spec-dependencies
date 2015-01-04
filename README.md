@@ -11,7 +11,7 @@ Compatible with SourceJS v0.4+.
 To install, run npm in `sourcejs/user` folder:
 
 ```
-npm install sourcejs-spec-status --save
+npm install sourcejs-spec-dependencies --save
 ```
 
 Then run Grunt update in SourceJS root:
