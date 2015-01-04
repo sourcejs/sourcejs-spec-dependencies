@@ -6,9 +6,25 @@ Spec Dependencies is [SourceJS](http://sourcejs.com) plugin for adding crosslink
 
 Compatible with SourceJS v0.4+.
 
+## Install
+
+To install, run npm in `sourcejs/user` folder:
+
+```
+npm install sourcejs-spec-status --save
+```
+
+Then run Grunt update in SourceJS root:
+
+```
+grunt update
+```
+
+After install, entering spec pages you will se prediction box.
+
 ## How to use
 
-Spec Dependencies automatically predicts all specs, that used in current spec ("most likely it uses" section on the picture above). If you also want to see next section to check which specs use current ("this spec used by"), you have to update info.json of the specs with "usedSpecs" property. Value of "usedSpecs" should be an array even for only element.
+Spec Dependencies automatically predicts all specs, that used in current spec by comparing CSS classes names with existing Spec names. If you also want to see next section to check which specs use current ("this spec used by"), you have to update `info.json` of the specs with "usedSpecs" property. Value of "usedSpecs" should be an array even for only element.
 
 ```
 // info.json of Example spec (/url/to/example/spec)

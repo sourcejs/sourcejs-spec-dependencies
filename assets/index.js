@@ -7,6 +7,14 @@
  * */
 "use strict";
 
+// Registering load event
+window.source = window.source || {};
+window.source.loadEvents = window.source.loadEvents || {};
+window.source.loadEvents.specDepencencies = window.source.loadEvents.specDepencencies || {
+    finishEvent: 'specDepencenciesFinish',
+    updateEvent: 'specDepencenciesUpdate'
+};
+
 define([
     'jquery',
     'sourceModules/module',
@@ -38,6 +46,8 @@ define([
 
         }, this.options.pluginsOptions.specDependencies);
 
+        this.moduleOpts = this.options.pluginsOptions.specDependencies;
+
         $(function() {
             _this.init();
         });
@@ -49,8 +59,8 @@ define([
 
     SpecDependencies.prototype.init = function() {
         var _this = this,
-            USED_BY_SPECS_CLASS = this.options.pluginsOptions.specDependencies.USED_BY_SPECS_CLASS,
-            USED_BY_SPEC_HEAD_LINK_CLASS = this.options.pluginsOptions.specDependencies.USED_BY_SPEC_HEAD_LINK_CLASS;
+            USED_BY_SPECS_CLASS = this.moduleOpts.USED_BY_SPECS_CLASS,
+            USED_BY_SPEC_HEAD_LINK_CLASS = this.moduleOpts.USED_BY_SPEC_HEAD_LINK_CLASS;
 
         // waiting for template's rendering
         setTimeout(function() {
@@ -59,6 +69,16 @@ define([
         }, 200);
 
         utils.toggleBlock(USED_BY_SPEC_HEAD_LINK_CLASS, USED_BY_SPECS_CLASS);
+    };
+
+    // Let SourceJS know that all DOM operations from this plugins are done
+    SpecDependencies.prototype.emitFinishEvent = function() {
+        if (window.CustomEvent) {
+            new CustomEvent('specDepencenciesFinish');
+        } else {
+            var event = document.createEvent('CustomEvent');
+            event.initCustomEvent('specDepencenciesFinish', true, true);
+        }
     };
 
     // Get classes of all elements inside .source_example
@@ -110,28 +130,32 @@ define([
     };
 
     SpecDependencies.prototype.getDependenciesTreeJSON = function() {
-        var URL_TO_DEPENDENCIES_FILE = this.options.pluginsOptions.specDependencies.URL_TO_DEPENDENCIES_FILE,
+        var URL_TO_DEPENDENCIES_FILE = this.moduleOpts.URL_TO_DEPENDENCIES_FILE,
             _this = this;
 
         $.ajax({
             url: URL_TO_DEPENDENCIES_FILE,
             dataType: 'json',
             success: function(data) {
-                _this.getUsedByspecList(data);
+                _this.handleDependenciesData(data);
             },
             error: function() {
-                console.log(_this.options.pluginsOptions.specDependencies.FILE_TREE_NOT_FOUND);
+                _this.handleDependenciesData();
             }
         });
     };
 
-    SpecDependencies.prototype.getUsedByspecList = function(jsonTree) {
-        var specList,
-            currentUrl = this.getCurrentUrlPath();
-
+    SpecDependencies.prototype.handleDependenciesData = function(jsonTree) {
         if (jsonTree) {
+            var specList;
+            var currentUrl = this.getCurrentUrlPath();
+
             specList = jsonTree[currentUrl];
             return this.drawUsedBySpecs(specList);
+        } else {
+            console.log(this.moduleOpts.FILE_TREE_NOT_FOUND);
+
+            this.emitFinishEvent();
         }
 
         return false;
@@ -142,9 +166,9 @@ define([
         var _this = this,
             specList = this.getUsedSpecList(),
 
-            USED_SPECS_CLASS = this.options.pluginsOptions.specDependencies.USED_SPECS_CLASS,
-            ROOT_CLASS = this.options.pluginsOptions.specDependencies.DEPENDENCIES_ROOT_CLASS,
-            HEADER = this.options.pluginsOptions.specDependencies.USED_SPECS_HEAD,
+            USED_SPECS_CLASS = this.moduleOpts.USED_SPECS_CLASS,
+            ROOT_CLASS = this.moduleOpts.DEPENDENCIES_ROOT_CLASS,
+            HEADER = this.moduleOpts.USED_SPECS_HEAD,
 
             res = "",
             header = "",
@@ -170,10 +194,10 @@ define([
     SpecDependencies.prototype.drawUsedBySpecs = function(specList) {
         var _this = this,
 
-            USED_BY_SPECS_CLASS = this.options.pluginsOptions.specDependencies.USED_BY_SPECS_CLASS,
-            ROOT_CLASS = this.options.pluginsOptions.specDependencies.DEPENDENCIES_ROOT_CLASS,
-            HEADER = this.options.pluginsOptions.specDependencies.USED_BY_SPEC_HEAD,
-            USED_BY_SPEC_HEAD_LINK_CLASS = this.options.pluginsOptions.specDependencies.USED_BY_SPEC_HEAD_LINK_CLASS,
+            USED_BY_SPECS_CLASS = this.moduleOpts.USED_BY_SPECS_CLASS,
+            ROOT_CLASS = this.moduleOpts.DEPENDENCIES_ROOT_CLASS,
+            HEADER = this.moduleOpts.USED_BY_SPEC_HEAD,
+            USED_BY_SPEC_HEAD_LINK_CLASS = this.moduleOpts.USED_BY_SPEC_HEAD_LINK_CLASS,
 
             res = "",
             header = "",
@@ -193,10 +217,12 @@ define([
             $('.' + ROOT_CLASS)
                 .append(header + '<ul class="' + USED_BY_SPECS_CLASS + '">' + res + '</ul>');
         }
+
+        this.emitFinishEvent();
     };
 
     SpecDependencies.prototype.turnOnLayout = function() {
-        var ROOT_CLASS = this.options.pluginsOptions.specDependencies.DEPENDENCIES_ROOT_CLASS,
+        var ROOT_CLASS = this.moduleOpts.DEPENDENCIES_ROOT_CLASS,
             SECTION_CLASS = this.options.SECTION_CLASS;
 
         if($('.' + ROOT_CLASS).length === 0) {
