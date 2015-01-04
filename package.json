@@ -23,5 +23,8 @@
   "_id": "sourcejs-spec-dependencies@0.1.0",
   "_shasum": "42656dba73da3d131b5aa5223c0f8107766f443e",
   "_resolved": "git://github.com/sourcejs/sourcejs-spec-dependencies#fe9fae410fda7e9ec76db2117613d55fc637faa0",
-  "_from": "sourcejs-spec-dependencies@git://github.com/sourcejs/sourcejs-spec-dependencies"
+  "_from": "sourcejs-spec-dependencies@git://github.com/sourcejs/sourcejs-spec-dependencies",
+  "dependencies": {
+    "deep-extend": "^0.3.2"
+  }
 }
