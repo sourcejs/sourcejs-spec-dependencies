@@ -1,7 +1,6 @@
 {
   "name": "sourcejs-spec-dependencies",
   "version": "0.1.8",
-  "description": "Crosslinks of specs",
   "repository": {
     "type": "git",
     "url": "https://github.com/sourcejs/sourcejs-spec-dependencies"
@@ -18,12 +17,6 @@
     "url": "https://github.com/sourcejs/sourcejs-spec-dependencies/issues"
   },
   "homepage": "https://github.com/sourcejs/sourcejs-spec-dependencies",
-  "readme": "Spec Dependencies plugin (crosslinks)",
-  "readmeFilename": "README.md",
-  "_id": "sourcejs-spec-dependencies@0.1.0",
-  "_shasum": "42656dba73da3d131b5aa5223c0f8107766f443e",
-  "_resolved": "git://github.com/sourcejs/sourcejs-spec-dependencies#fe9fae410fda7e9ec76db2117613d55fc637faa0",
-  "_from": "sourcejs-spec-dependencies@git://github.com/sourcejs/sourcejs-spec-dependencies",
   "dependencies": {
     "deep-extend": "^0.3.2"
   }
