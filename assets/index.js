@@ -19,9 +19,10 @@ define([
     'jquery',
     'sourceModules/module',
     'sourceModules/css',
-    'sourceModules/parseFileTree',
+    'text!/api/specs/raw',
+    'text!/api/specs',
     'sourceModules/utils'
-], function ($, module, Css, pft, utils) {
+], function ($, module, Css, fileTree, fileTreeFlat, utils) {
 
     function SpecDependencies() {
         var _this = this;
@@ -47,11 +48,12 @@ define([
         }, this.options.pluginsOptions.specDependencies);
 
         this.moduleOpts = this.options.pluginsOptions.specDependencies;
+        this.fileTree = JSON.parse(fileTree);
+        this.fileTreeFlat = JSON.parse(fileTreeFlat);
 
         $(function() {
             _this.init();
         });
-
     }
 
     SpecDependencies.prototype = module.createInstance();
@@ -107,7 +109,7 @@ define([
     };
 
     SpecDependencies.prototype.getUsedSpecList = function() {
-        var specPaths = pft.getAllPages(),
+        var specPaths = this.fileTreeFlat,
             classList = this.getClassList(),
             specList = [],
             currentSpec = this.getCurrentUrlPath();
@@ -231,7 +233,7 @@ define([
     };
 
     SpecDependencies.prototype.getTitleOfSpecByUrl = function(url) {
-        var fileTree = pft.getParsedJSON(),
+        var fileTree = this.fileTree,
             urlArr = this.getCurrentUrlPathArray(url),
             title;
 

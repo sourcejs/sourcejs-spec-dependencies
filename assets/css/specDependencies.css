@@ -26,7 +26,7 @@ body p.source_deps,
 
     .source_deps_used-by-specs,
     .source_deps_used-specs {
-        margin-left: -5px !important;
+        margin: 0 0 0 -5px !important;
         }
 
         .source_deps_used-by-specs > li,
