@@ -1,5 +1,7 @@
 # Spec Dependencies (crosslinks)
 
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/sourcejs/Source)
+
 Spec Dependencies is [SourceJS](http://sourcejs.com) plugin for adding crosslinks section into each spec. It predicts used specs through the css selectors used in current spec.
 
 ![image](http://monosnap.com/image/gG9KatayyGGg5BxYt3704OIIQHUg0V.png)
