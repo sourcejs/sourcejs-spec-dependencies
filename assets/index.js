@@ -29,6 +29,7 @@ define([
 
         var moduleCss = new Css("/node_modules/sourcejs-spec-dependencies/assets/css/specDependencies.css");
 
+        this.options.pluginsOptions = this.options.pluginsOptions || this.options.plugins || {};
         this.options.pluginsOptions.specDependencies = $.extend(true, {
 
             DEPENDENCIES_ROOT_CLASS: "source_deps",
