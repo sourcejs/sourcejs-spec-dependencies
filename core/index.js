@@ -2,8 +2,10 @@ var fs = require('fs');
 var deepExtend = require('deep-extend');
 var path = require('path');
 
+var globalConfig = global.opts.plugins && global.opts.plugins.specDependenciesTree ? global.opts.plugins.specDependenciesTree : {};
+
 var config = {
-    includedDirs: [],
+    includedDirs: ['specs'],
     outputFile: "data/spec_dependencies_tree.json",
 
     // cron
@@ -16,8 +18,7 @@ var config = {
     sourceRoot: global.opts.core.common.pathToUser
 };
 // Overwriting base options
-deepExtend(config, global.opts.core.specDependenciesTree);
-
+deepExtend(config, global.opts.core.specDependenciesTree, globalConfig);
 
 var specDependenciesTree = function(dir) {
     var outputJSON = {},
