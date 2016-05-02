@@ -9,7 +9,7 @@ var globalConfig = global.opts.plugins && global.opts.plugins.specDependenciesTr
 
 var config = {
     includedDirs: ['specs'],
-    outputFile: "data/spec_dependencies_tree.json",
+    outputFile: 'data/spec_dependencies_tree.json',
 
     // cron
     cron: false,
@@ -17,7 +17,7 @@ var config = {
     cronRepeatTime: 60000,
 
     // file from parser get info
-    infoFile: "info.json"
+    infoFile: 'info.json'
 };
 // Overwriting base options
 deepExtend(config, globalConfig);
@@ -33,7 +33,7 @@ var specDependenciesTree = function(dir) {
             var pathToInfo = dir + '/' + includedDir + '/' + specDir;
 
             if (fs.existsSync(pathToInfo + '/' + config.infoFile)) {
-                var fileJSON = JSON.parse(fs.readFileSync(pathToInfo + '/' + config.infoFile, "utf8"));
+                var fileJSON = JSON.parse(fs.readFileSync(pathToInfo + '/' + config.infoFile, 'utf8'));
 
                 if (fileJSON['usedSpecs']) {
                     fileJSON['usedSpecs'].forEach(function(usedSpec){
@@ -60,7 +60,7 @@ var SpecDependenciesWrite = function() {
         if (err) {
             console.log('Error writing file tree of dependecies: ', err);
         } else {
-            console.log("Spec dependencies JSON saved to " + outputFile);
+            console.log('Spec dependencies JSON saved to ' + outputFile);
         }
     });
 };
