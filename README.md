@@ -6,34 +6,24 @@ Spec Dependencies is [SourceJS](http://sourcejs.com) plugin for adding crosslink
 
 ![image](http://monosnap.com/image/gG9KatayyGGg5BxYt3704OIIQHUg0V.png)
 
-Compatible with SourceJS v0.4.x-0.5.x (not compatible with SourceJS installed as NPM dep).
+Compatible with SourceJS 0.6.x. For older versions use `0.1.x` branch.
 
 ## Install
 
-To install, run npm in `sourcejs/user` folder:
+To install, run npm in SourceJS project folder:
 
 ```
 npm install sourcejs-spec-dependencies --save
 ```
 
-Then run Grunt update in SourceJS root:
-
-```
-grunt update
-```
-
-or from 0.5.2+
-
-```
-npm run build
-```
+Restart the app, and you're ready to go.
 
 
 ## How to use
 
 ### Configuration
 
-By default plugin will parse documentation pages located in `user/specs` folder, to extend the search folder list, update plugin options in `user/options.js`:
+By default plugin will parse documentation pages located in `/specs` folder, to extend the search folder list, update plugin options in `/options.js`:
 
 ```
 {
@@ -45,7 +35,7 @@ By default plugin will parse documentation pages located in `user/specs` folder,
 }
 ```
 
-This conf will ensure that plugin checks both `user/specs` and `user/more-specs` folders to build the dependency tree.
+This conf will ensure that plugin checks both `/specs` and `/more-specs` folders to build the dependency tree.
 
 
 ### Manually set spec dependencies
