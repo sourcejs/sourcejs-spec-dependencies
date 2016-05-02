@@ -1,6 +1,9 @@
 var fs = require('fs');
 var deepExtend = require('deep-extend');
 var path = require('path');
+var getUserPath = require(path.join(global.pathToApp, 'core/lib/getUserPath'));
+
+var userPath = getUserPath();
 
 var globalConfig = global.opts.plugins && global.opts.plugins.specDependenciesTree ? global.opts.plugins.specDependenciesTree : {};
 
@@ -14,11 +17,10 @@ var config = {
     cronRepeatTime: 60000,
 
     // file from parser get info
-    infoFile: "info.json",
-    sourceRoot: global.opts.core.common.pathToUser
+    infoFile: "info.json"
 };
 // Overwriting base options
-deepExtend(config, global.opts.core.specDependenciesTree, globalConfig);
+deepExtend(config, globalConfig);
 
 var specDependenciesTree = function(dir) {
     var outputJSON = {},
@@ -47,14 +49,14 @@ var specDependenciesTree = function(dir) {
 };
 
 var SpecDependenciesWrite = function() {
-    var outputFile = global.app.get('user') + "/" + config.outputFile;
+    var outputFile = path.join(userPath, config.outputFile);
     var outputPath = path.dirname(outputFile);
 
     if (!fs.existsSync(outputPath)) {
         fs.mkdirSync(outputPath);
     }
 
-    fs.writeFile(outputFile, JSON.stringify(specDependenciesTree(config.sourceRoot), null, 4), function (err) {
+    fs.writeFile(outputFile, JSON.stringify(specDependenciesTree(userPath), null, 4), function (err) {
         if (err) {
             console.log('Error writing file tree of dependecies: ', err);
         } else {
