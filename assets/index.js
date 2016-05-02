@@ -15,7 +15,7 @@ window.source.loadEvents.specDepencencies = window.source.loadEvents.specDepence
     updateEvent: 'specDepencenciesUpdate'
 };
 
-define([
+sourcejs.amd.define([
     'jquery',
     'sourceModules/module',
     'sourceModules/css',
